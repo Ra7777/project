@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<robot name="tricycle_drive" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="inertial_macros.xacro"/>
+
+  <material name="Black">
+    <color rgba="0 0 0 1" />
+  </material>
+  <material name="Grey">
+    <color rgba="0.8 0.8 0.8 1" />
+  </material>
+  <material name="Orange">
+    <color rgba="1 0.6 0 1" />
+  </material>
+  <material name="White">
+    <color rgba="1 1 1 1" />
+  </material>
+
+  <link name="base_link">
+  </link>
+
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="base_footprint"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="base_footprint">
+  </link>
+
+  <!-- Chassis -->
+  <link name="chassis">
+    <collision>
+      <geometry>
+        <mesh filename="file://$(find misis_robot)/description/meshes/chassis_v3.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <geometry>
+        <mesh filename="file://$(find misis_robot)/description/meshes/chassis_v3.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="Orange" />
+    </visual>
+
+    <!--<xacro:inertial_box mass="154" x="0.807" y="0.777" z="0.349">
+      <origin xyz="-0.3 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:inertial_box>-->
+
+    <inertial>
+      <mass value="154" />
+      <inertia ixx="1.409E+1" ixy="-5.303E-1" ixz="5.322E-1" iyy="1.750E+1" iyz="-3.678E-1" izz="1.486E+1" />
+      <origin xyz="-0.0091981 0.005643 0.679167" rpy="0 0 0"/>
+      </inertial>
+  </link>
+
+  <joint name="chassis_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="chassis" />
+    <origin xyz="0.2878355 0 0.175" rpy="0 0 0"/>
+  </joint>
+
+
+  <!-- left wheel Link -->
+  <link name="left_wheel">
+    <collision>
+      <geometry>
+        <!--<mesh filename="file://$(find misis_robot)/description/meshes/left_wheel_v2.stl" scale="0.001 0.001 0.001"/>-->
+        <!--<cylinder length="0.042" radius="0.049"/>-->
+        <sphere radius="0.049"/>
+      </geometry>
+      <!--<origin xyz="0 0 0" rpy="1.57 0 0"/>-->
+    </collision>
+
+    <visual>
+      <geometry>
+        <mesh filename="file://$(find misis_robot)/description/meshes/left_wheel_v2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="Black" />
+    </visual>
+
+    <xacro:inertial_cylinder mass="0.2" length="0.042" radius="0.049">
+      <origin xyz="0 0 0" rpy="1.57 0 0"/>
+    </xacro:inertial_cylinder>
+
+    <!--<inertial>
+      <mass value="2" />
+      <inertia ixx="0.145833" ixy="0.0" ixz="0.0" iyy="0.145833" iyz="0.0" izz="0.125" />
+    </inertial>-->
+  </link>
+
+  <gazebo reference="left_wheel">
+    <mu1 value="10000"/>
+    <mu2 value="10000"/>
+  </gazebo>
+
+  <joint name="left_wheel_joint" type="continuous">
+    <origin xyz="-0.2878355 0.308 -0.1067775" rpy="0 0 0" />
+    <parent link="chassis" />
+    <child link="left_wheel" />
+    <axis xyz="0 1 0" />
+    <!--<dynamics damping="0.2" />-->
+  </joint>
+
+  <!-- right wheel Link -->
+  <link name="right_wheel">
+    <collision>
+      <geometry>
+        <!--<mesh filename="file://$(find misis_robot)/description/meshes/right_wheel_v2.stl" scale="0.001 0.001 0.001"/>-->
+        <!--<cylinder length="0.042" radius="0.049"/>-->
+        <sphere radius="0.049"/>
+      </geometry>
+      <!--<origin xyz="0 0 0" rpy="1.57 0 0"/>-->
+    </collision>
+
+    <visual>
+      <geometry>
+        <mesh filename="file://$(find misis_robot)/description/meshes/right_wheel_v2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="Black" />
+    </visual>
+
+    <xacro:inertial_cylinder mass="0.3" length="0.042" radius="0.049">
+      <origin xyz="0 0 0" rpy="1.57 0 0"/>
+    </xacro:inertial_cylinder>
+
+    <!--<inertial>
+      <mass value="2" />
+      <inertia ixx="0.145833" ixy="0.0" ixz="0.0" iyy="0.145833" iyz="0.0" izz="0.125" />
+    </inertial>-->
+  </link>
+
+  <gazebo reference="right_wheel">
+    <mu1 value="10000"/>
+    <mu2 value="10000"/>
+  </gazebo>
+
+  <joint name="right_wheel_joint" type="continuous">
+      <origin xyz="-0.2881779 -0.3078914 -0.1066069" rpy="0 0 0" />
+    <parent link="chassis" />
+    <child link="right_wheel" />
+    <axis xyz="0 1 0" />
+    <!--<dynamics damping="0.2" />-->
+  </joint>
+
+  <!-- Steering Link -->
+  <link name="steering_link">
+    <collision>
+      <geometry>
+        <mesh filename="file://$(find misis_robot)/description/meshes/front_wheel_base_collision_v2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <geometry>
+        <mesh filename="file://$(find misis_robot)/description/meshes/front_wheel_base_v2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="Black" />
+    </visual>
+
+    <!-- length="0.231"-->
+   <!-- <xacro:inertial_cylinder mass="1" length="0.096" radius="0.0755">
+      <origin xyz="0 0 0.057" rpy="0 0 0"/>
+    </xacro:inertial_cylinder>-->
+
+    <inertial>
+      <mass value="1" />
+      <inertia ixx="4.222E-3" ixy="105.279E-9" ixz="-101.865E-9" iyy="4.014E-3" iyz="-384.989E-9" izz="1.794E-3" />
+      <origin xyz="0 0 0.049821" rpy="0 0 0"/>
+    </inertial>
+  </link>
+
+  <joint name="steering_joint" type="continuous">
+      <origin xyz="0.2755991 0 0.0190035" rpy="0 0 0" />
+    <parent link="chassis" />
+    <child link="steering_link" />
+    <axis xyz="0 0 1" />
+  </joint>
+
+  <!-- traction wheel link -->
+  <link name="wheel_front_link">
+    <collision>
+      <geometry>
+        <!--<mesh filename="file://$(find misis_robot)/description/meshes/front_wheel_v2.stl" scale="0.001 0.001 0.001"/>-->
+        <sphere radius="0.082"/>
+        <!--<cylinder length="0.063" radius="0.082"/>-->
+      </geometry>
+      <!--<origin xyz="0 0 0" rpy="1.57 0 0"/>-->
+    </collision>
+
+    <visual>
+      <geometry>
+        <mesh filename="file://$(find misis_robot)/description/meshes/front_wheel_v2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="Black" />
+    </visual>
+
+    <xacro:inertial_cylinder mass="2.5" length="0.063" radius="0.08255">
+      <origin xyz="0 0 0" rpy="1.57 0 0"/>
+    </xacro:inertial_cylinder>
+
+    <!--<inertial>
+      <mass value="15" />
+      <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+    </inertial>-->
+  </link>
+
+  <gazebo reference="wheel_front_link">
+    <mu1 value="10000"/>
+    <mu2 value="10000"/>
+  </gazebo>
+
+  <joint name="traction_joint" type="continuous">
+    <parent link="steering_link" />
+    <child link="wheel_front_link" />
+    <origin xyz="0 0 -0.0957646" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+  </joint>
+
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+    <joint name="steering_joint">
+      <command_interface name="position" />
+      <state_interface name="position" />
+    </joint>
+    <joint name="traction_joint">
+      <command_interface name="velocity" />
+      <state_interface name="velocity" />
+      <state_interface name="position" />
+    </joint>
+  </ros2_control>
+
+  <gazebo>
+    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+      <parameters>$(find misis_robot)/config/tricycle_drive_controller.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+  <joint name="laser_joint" type="fixed">
+        <parent link="chassis"/>
+        <child link="laser_frame"/>
+        <origin xyz="0.1695 0 0.211" rpy="0 0 -1.57"/>
+    </joint>
+
+    <link name="laser_frame">
+        <visual>
+            <geometry>
+                <cylinder radius="0.0345" length="0.02"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+        <!--<collision>
+            <geometry>
+                <cylinder radius="0.0345" length="0.02"/>
+            </geometry>
+        </collision>-->
+    </link>
+
+
+
+    <gazebo reference="laser_frame">
+        <material>Gazebo/Red</material>
+
+        <sensor name="laser" type="ray">
+            <pose> 0 0 0 0 0 0 </pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <min_angle>-3.14</min_angle>
+                        <max_angle>3.14</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.3</min>
+                    <max>12</max>
+                </range>
+            </ray>
+            <plugin name="laser_controller" filename="libgazebo_ros_ray_sensor.so">
+                <ros>
+                    <argument>~/out:=scan</argument>
+                </ros>
+                <output_type>sensor_msgs/LaserScan</output_type>
+                <frame_name>laser_frame</frame_name>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+</robot>
